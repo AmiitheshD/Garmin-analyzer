@@ -1,0 +1,21 @@
+import pandas as pd
+
+data_frame = pd.read_csv("garmin_data.csv")
+data_frame.columns = data_frame.columns.str.strip()
+cols_to_keep = [
+    "Date",
+    "Distance",
+    "Moving Time",          # or swap for Moving Time
+    "Avg HR",
+    "Avg Pace",
+    "Total Ascent",
+    "Total Descent",
+    "Avg Power"     # optional, drop if not using
+]
+
+to_drop = [i for i in data_frame.columns if i not in cols_to_keep]
+
+
+data_frame.drop(columns=to_drop, inplace=True)
+
+data_frame.info()
