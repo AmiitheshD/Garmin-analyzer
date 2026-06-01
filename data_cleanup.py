@@ -25,6 +25,9 @@ data_frame = data_frame.rename(columns={
     "Total Ascent": "total_ascent",
     "Total Descent": "total_descent",
     "Avg Power": "avg_power",
+    "Distance": "distance",
+    "Date": "date"
+    
 })
 
 
