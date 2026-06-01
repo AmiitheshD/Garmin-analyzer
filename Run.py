@@ -1,8 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional, Union
-
-
+from datetime import datetime    
 class Run(BaseModel):
     date: datetime
     distance: float
@@ -12,8 +9,8 @@ class Run(BaseModel):
     total_descent: int
     avg_power: int
     
-    
-    def time_fix(self):
+    @property
+    def time(self):
         """Basic parse of `moving_time` into total seconds.
 
         Assumes input is well-formed and numeric. Handles:
@@ -24,7 +21,7 @@ class Run(BaseModel):
         Returns int(total_seconds) or `None` for unexpected part counts.
         (Exceptions from bad input are not caught here.)
         """
-        t = str(self.moving_time)
+        t = self.moving_time
         parts = [int(p) for p in t.split(":")]
 
         if len(parts) == 1:
@@ -39,11 +36,22 @@ class Run(BaseModel):
         else:
             return None
 
-        return hours * 3600 + minutes * 60 + seconds
+        return hours + (minutes / 60) + (seconds / 3600)
     
-    
-    
+    @property
+    def pace(self):
+        """Return speed in miles per hour.
+
+        Uses `self.time` (hours) and `self.distance` (assumed kilometers),
+        converts distance to miles, and divides by hours.
+        """
+        hours = self.time
+        miles = self.distance 
+        if not hours:
+            return None
+        return miles / hours
 
 
         
        
+
