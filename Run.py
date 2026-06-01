@@ -1,45 +1,49 @@
 from pydantic import BaseModel
 from datetime import datetime
-# class Run:
-    
-#     def __init__(self, date, distance, time, avg_hr, avg_pace, total_ascent, total_descent, avg_power):
-#         self.date = date
-#         self.distance = distance
-#         self.time = time
-#         self.avg_hr = avg_hr
-#         self.avg_pace = avg_pace
-#         self.total_ascent = total_ascent
-#         self.total_descent = total_descent
-#         self.avg_power = avg_power
-#     def __repr__(self):
-#         return (
-#             f"Run(date={self.date}, distance={self.distance}, time={self.time}, "
-#             f"avg_hr={self.avg_hr}, avg_pace={self.avg_pace})"
-#         )
-        
-        
+from typing import Optional, Union
+
+
 class Run(BaseModel):
     date: datetime
     distance: float
     moving_time: str
     avg_hr: int
-    avg_pace: str
     total_ascent: int
     total_descent: int
     avg_power: int
     
     
-test = Run(
-    date=datetime(2020, 12, 4, 13, 24, 33),
-    distance=4.4,
-    moving_time="4:25",
-    avg_hr=123,
-    avg_pace="9:22",
-    total_ascent=400,
-    total_descent=200,
-    avg_power=20
-)
-print(test)
-           
+    def time_fix(self):
+        """Basic parse of `moving_time` into total seconds.
+
+        Assumes input is well-formed and numeric. Handles:
+        - "SS"
+        - "MM:SS"
+        - "HH:MM:SS"
+
+        Returns int(total_seconds) or `None` for unexpected part counts.
+        (Exceptions from bad input are not caught here.)
+        """
+        t = str(self.moving_time)
+        parts = [int(p) for p in t.split(":")]
+
+        if len(parts) == 1:
+            hours = 0
+            minutes = 0
+            seconds = parts[0]
+        elif len(parts) == 2:
+            hours = 0
+            minutes, seconds = parts
+        elif len(parts) == 3:
+            hours, minutes, seconds = parts
+        else:
+            return None
+
+        return hours * 3600 + minutes * 60 + seconds
+    
+    
+    
+
 
         
+       
