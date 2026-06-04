@@ -1,13 +1,30 @@
 import data_cleanup as dc
 import numpy as np
 from sklearn.linear_model import LinearRegression
-
+from datetime import datetime
 import matplotlib.pyplot as plt
+
+
 RIEGEL_DEFAULT = 1.06
 ##This is the basic regial formula format
 def riegel_predict(known_distance, known_time_hrs, target_distance, exponent=RIEGEL_DEFAULT):
     """Predict finish time (hours) for target_distance given a known effort."""
     return known_time_hrs * (target_distance / known_distance) ** exponent
+
+
+def recency_weight(run_date, today=None, halflife_days=42):
+    """
+    Exponential decay weight based on how recent the run is.
+    halflife_days=42 reflects ~6 weeks for aerobic fitness adaptation.
+    A run from today gets weight 1.0, a run from 42 days ago gets 0.5, and so on.
+    """
+    if today is None:
+        today = datetime.today() ## we are doing this instead of doing datetime.today() so the function doesnt get stuck at a single time
+    days_ago = (today - run_date).days ## doing just today - yesterday gives you a time delta but doing .days gives you the days
+    decay = np.log(2) / halflife_days          # λ = ln(2) / half-life fiding the decay constant of the run accoridn to research on half life
+    return np.exp(-decay * days_ago)
+ 
+
 
 
 def fit_personal_exponent(runs: list) -> float:
