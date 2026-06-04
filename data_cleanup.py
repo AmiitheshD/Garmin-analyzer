@@ -41,7 +41,6 @@ for _, row in data_frame.iterrows():
         avg_power=row["avg_power"],
     ))
     
-    print(runs)
 
 
 
