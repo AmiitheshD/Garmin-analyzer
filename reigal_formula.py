@@ -20,7 +20,7 @@ def fit_personal_exponent(runs: list) -> float:
     
     log_d = np.log(distances).reshape(-1, 1)
     log_t = np.log(times)
-
+    ## the linear regression function needs 
     model = LinearRegression(fit_intercept=True)
 
     model.fit(log_d, log_t)
@@ -29,5 +29,7 @@ def fit_personal_exponent(runs: list) -> float:
     return model.coef_[0]
 
 
-temporary = dc.runs
-print(fit_personal_exponent(temporary))
+if __name__ == "__main__":
+    temporary = dc.runs
+    exponent = fit_personal_exponent(temporary)
+    print(f"Your personal Riegel exponent: {exponent}")
