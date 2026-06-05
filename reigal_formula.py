@@ -21,9 +21,20 @@ def recency_weight(run_date, today=None, halflife_days=42):
     if today is None:
         today = datetime.today() ## we are doing this instead of doing datetime.today() so the function doesnt get stuck at a single time
     days_ago = (today - run_date).days ## doing just today - yesterday gives you a time delta but doing .days gives you the days
-    decay = np.log(2) / halflife_days          # λ = ln(2) / half-life fiding the decay constant of the run accoridn to research on half life
+    decay = np.log(2) / halflife_days          # λ = 2ln(2) / half-life fiding the decay constant of the run accoridn to research on half life
     return np.exp(-decay * days_ago)
  
+def effort_weight(hr, resting_hr, max_hr):
+    """
+    Heart Rate Reserve (HRR) weight.
+    Normalises HR between resting and max so effort is comparable across runs.
+    A race-effort run (HRR ~90%) gets much higher weight than an easy jog (HRR ~50%).
+    """
+    hrr = (hr - resting_hr) / (max_hr - resting_hr)
+    hrr = np.clip(hrr, 0, 1)                   # safety clamp to [0, 1]
+    return hrr
+
+
 
 
 
