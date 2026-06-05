@@ -8,6 +8,7 @@ class Run(BaseModel):
     total_ascent: int
     total_descent: int
     avg_power: int
+    max_hr:int
     
     @property
     def time(self):
@@ -50,6 +51,7 @@ class Run(BaseModel):
         if not hours:
             return None
         return miles / hours
+    
 
 
         
