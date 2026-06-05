@@ -36,7 +36,7 @@ data_frame = data_frame.rename(columns={
 
 #Turning the data frame into a list of Run classes
 runs = []
-for _, row in data_frame.iterrows():
+for _, row in data_frame.iterrows(): #that dash means I dont care about the value
     runs.append(Run.Run(
         date=row["date"],
         distance=row["distance"],
@@ -45,6 +45,7 @@ for _, row in data_frame.iterrows():
         total_ascent=row["total_ascent"],
         total_descent=row["total_descent"],
         avg_power=row["avg_power"],
+        max_hr = row["max_hr"]
     ))
     
 
